@@ -1,27 +1,28 @@
 # GitOps Configurations for Goal Tracker
 
-This repository contains Kubernetes manifests and Kustomize configurations for the Goal Tracker application, managed by ArgoCD.
+This repository contains Kubernetes manifests for the Goal Tracker application, managed by ArgoCD.
 
-## Structure
+## Simplified Structure
 
 ```
-├── apps/
-│   └── goal-tracker/
-│       ├── base/                 # Base Kubernetes manifests
-│       │   ├── backend.yaml      # Backend deployment and service
-│       │   ├── frontend.yaml     # Frontend deployment and service
-│       │   ├── postgres.yaml     # PostgreSQL deployment, service, and PVC
-│       │   ├── postgres-config.yaml # ConfigMap and Secret for PostgreSQL
-│       │   ├── namespace.yaml    # Namespace definition
-│       │   └── kustomization.yaml # Base kustomization
-│       └── overlays/            # Environment-specific configurations
-│           ├── dev/             # Development environment
-│           ├── test/            # Test environment
-│           └── prod/            # Production environment
-└── environments/               # Environment entry points
-    ├── dev/
-    ├── test/
-    └── prod/
+├── dev/                      # Development environment manifests
+│   ├── namespace.yaml        # Namespace definition
+│   ├── frontend.yaml         # Frontend deployment and service (1 replica)
+│   ├── backend.yaml          # Backend deployment and service (1 replica)
+│   ├── postgres-config.yaml  # PostgreSQL ConfigMap and Secret
+│   └── postgres.yaml         # PostgreSQL deployment, service, and PVC (5Gi)
+├── test/                     # Test environment manifests
+│   ├── namespace.yaml        # Namespace definition
+│   ├── frontend.yaml         # Frontend deployment and service (2 replicas)
+│   ├── backend.yaml          # Backend deployment and service (2 replicas)
+│   ├── postgres-config.yaml  # PostgreSQL ConfigMap and Secret
+│   └── postgres.yaml         # PostgreSQL deployment, service, and PVC (5Gi)
+└── prod/                     # Production environment manifests
+    ├── namespace.yaml        # Namespace definition
+    ├── frontend.yaml         # Frontend deployment and service (3 replicas)
+    ├── backend.yaml          # Backend deployment and service (3 replicas)
+    ├── postgres-config.yaml  # PostgreSQL ConfigMap and Secret
+    └── postgres.yaml         # PostgreSQL deployment, service, and PVC (20Gi)
 ```
 
 ## Application Components
@@ -61,16 +62,15 @@ This repository contains Kubernetes manifests and Kustomize configurations for t
 
 Each environment has an ArgoCD Application that:
 - Tracks this repository
-- Monitors the respective environment path
+- Monitors the respective environment directory (dev/, test/, or prod/)
 - Automatically syncs changes
 - Self-heals on configuration drift
 
 ## Making Changes
 
-1. **Update Base Configuration**: Modify files in `apps/goal-tracker/base/`
-2. **Environment-Specific Changes**: Modify overlay files in `apps/goal-tracker/overlays/<env>/`
-3. **Image Updates**: Update image tags in the respective kustomization.yaml files
-4. **Commit and Push**: ArgoCD will automatically detect and sync changes
+1. **Update Environment Configuration**: Modify files directly in the environment folder (dev/, test/, or prod/)
+2. **Image Updates**: Update image tags in the respective deployment YAML files
+3. **Commit and Push**: ArgoCD will automatically detect and sync changes
 
 ## Image Update Process
 
@@ -84,27 +84,25 @@ To update application images:
    docker push itsbaivab/backend:v1.1.0
    ```
 
-2. Update the kustomization.yaml in the respective environment:
-   ```yaml
-   images:
-   - name: itsbaivab/backend
-     newTag: v1.1.0
-   - name: itsbaivab/frontend
-     newTag: v1.1.0
+2. Update the image tags in the respective environment deployment files:
+   ```bash
+   # For dev environment
+   sed -i 's/itsbaivab/frontend:latest/itsbaivab/frontend:v1.1.0/g' dev/frontend.yaml
+   sed -i 's/itsbaivab/backend:latest/itsbaivab/backend:v1.1.0/g' dev/backend.yaml
    ```
 
 3. Commit and push changes
 
 ## Testing Configurations
 
-Use `kustomize` to test configurations locally:
+Test configurations locally using kubectl:
 
 ```bash
 # Test dev configuration
-kustomize build environments/dev
+kubectl apply --dry-run=client -f dev/
 
-# Test specific overlay
-kustomize build apps/goal-tracker/overlays/prod
+# Test specific file
+kubectl apply --dry-run=client -f prod/frontend.yaml
 ```
 
 ## Troubleshooting
