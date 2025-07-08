@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-config
-  namespace: goal-tracker
+  namespace: 3tirewebapp-dev
 data:
   PORT: "3000"
   BACKEND_URL: http://backend:8080

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: goal-tracker-app
+  name: 3tirewebapp-dev
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,10 +10,10 @@ spec:
   source:
     repoURL: https://github.com/itsBaivab/gitops-configs.git
     targetRevision: HEAD
-    path: /3tire-configs
+    path: 3tire-configs
   destination:
     server: https://kubernetes.default.svc
-    namespace: goal-tracker
+    namespace: 3tirewebapp-dev
   syncPolicy:
     automated:
       prune: true
