@@ -5,9 +5,9 @@ resources:
   - namespace.yaml
   - postgres-config.yaml
   - postgres-pvc.yaml
-  - postgres-keyvault.yaml  # Updated to use Key Vault integration
+  - postgres-keyvault.yaml # Updated to use Key Vault integration
   - backend-config.yaml
-  - backend-keyvault.yaml  # Updated to use Key Vault credentials
+  - backend-keyvault.yaml # Updated to use Key Vault credentials
   - frontend-config.yaml
   - frontend.yaml
   - key-vault-secrets.yaml

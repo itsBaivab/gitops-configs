@@ -66,7 +66,7 @@ spec:
               export POSTGRES_DB=${POSTGRES_DB:-$POSTGRES_DB_FALLBACK}
               export POSTGRES_USER=${POSTGRES_USER:-$POSTGRES_USER_FALLBACK}
               export POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-$POSTGRES_PASSWORD_FALLBACK}
-              
+
               echo "Starting PostgreSQL with database: $POSTGRES_DB, user: $POSTGRES_USER"
               exec docker-entrypoint.sh postgres
           volumeMounts:
