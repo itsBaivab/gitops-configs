@@ -22,4 +22,4 @@ images:
   - name: itsbaivab/frontend
     newTag: v2
   - name: itsbaivab/backend
-    newTag: v2
+    newTag: latest

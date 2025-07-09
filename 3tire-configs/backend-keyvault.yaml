@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: itsbaivab/backend:v2
+          image: itsbaivab/backend:latest
           ports:
             - containerPort: 8080
           env:
