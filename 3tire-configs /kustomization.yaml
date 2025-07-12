@@ -10,7 +10,7 @@ resources:
   - backend-keyvault.yaml # Updated to use Key Vault credentials
   - frontend-config.yaml
   - frontend.yaml
-  - key-vault-secrets.yaml
+  - external-secrets-placeholder.yaml # Placeholder for External Secrets Operator
 
 namespace: 3tirewebapp-dev
 

@@ -1,0 +1,42 @@
+# GitOps-friendly manifest with no hardcoded sensitive values
+# This file can safely be committed to the Git repository
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 3tirewebapp-dev
+  labels:
+    app.kubernetes.io/name: 3tirewebapp
+    environment: dev
+---
+# Note: The SecretProviderClass and ExternalSecret resources
+# are created dynamically by Terraform with actual values.
+# No sensitive information is stored in this repository.
+
+# This ConfigMap only contains non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: 3tirewebapp-dev
+data:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  SSL: disable
+  PORT: "8080"
+  ENVIRONMENT: dev
+---
+# Placeholder file for documentation
+# Actual secrets are managed by:
+# 1. Azure Key Vault Secrets Provider (CSI driver)
+# 2. External Secrets Operator (recommended)
+# 3. Terraform-generated manifests
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: secret-management-info
+  namespace: 3tirewebapp-dev
+data:
+  secret-provider: "azure-keyvault"
+  managed-by: "terraform"
+  note: "Sensitive values are dynamically injected, not stored in Git"
