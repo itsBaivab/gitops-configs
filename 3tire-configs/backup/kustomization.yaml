@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - postgres-pvc.yaml
+  - postgres.yaml # Updated to use External Secrets Operator
+  - backend-config.yaml
+  - backend.yaml # Updated to use External Secrets Operator
+  - frontend-config.yaml
+  - frontend.yaml
+  - external-secrets-placeholder.yaml # Placeholder for External Secrets Operator
+
+namespace: 3tirewebapp-dev
+
+commonLabels:
+  app.kubernetes.io/name: 3tirewebapp
+  app.kubernetes.io/part-of: 3tirewebapp
+
+images:
+  - name: itsbaivab/frontend
+    newTag: v2
+  - name: itsbaivab/backend
+    newTag: latest

@@ -93,7 +93,6 @@ configMapGenerator:
 
 # Secret generators for non-sensitive shared values
 secretGenerator: []
-
 # Name suffix for resources (useful for blue-green deployments)
 # nameSuffix: -v1
 
