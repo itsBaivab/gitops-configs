@@ -9,6 +9,8 @@ metadata:
     app.kubernetes.io/part-of: 3tirewebapp
 spec:
   replicas: 1
+  strategy:
+    type: Recreate  # Required for PVC with ReadWriteOnce
   selector:
     matchLabels:
       app: postgres
@@ -19,6 +21,7 @@ spec:
         app.kubernetes.io/name: 3tirewebapp
         app.kubernetes.io/part-of: 3tirewebapp
     spec:
+      serviceAccountName: default  # Use default service account
       containers:
       - name: postgres
         image: postgres:15

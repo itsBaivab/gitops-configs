@@ -19,6 +19,7 @@ spec:
         app.kubernetes.io/name: 3tirewebapp
         app.kubernetes.io/part-of: 3tirewebapp
     spec:
+      serviceAccountName: default
       containers:
       - name: backend
         image: itsbaivab/backend:latest
