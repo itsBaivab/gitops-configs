@@ -19,69 +19,57 @@ spec:
         app.kubernetes.io/name: 3tirewebapp
         app.kubernetes.io/part-of: 3tirewebapp
     spec:
-      serviceAccountName: postgres-sa
       containers:
-        - name: postgres
-          image: postgres:15
-          ports:
-            - containerPort: 5432
-          env:
-            # Use External Secrets Operator managed secrets
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials-from-kv
-                  key: POSTGRES_DB
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials-from-kv
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials-from-kv
-                  key: POSTGRES_PASSWORD
-            - name: PGDATA
-              value: "/var/lib/postgresql/data/pgdata"
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "512Mi"
-              cpu: "200m"
-          livenessProbe:
-            exec:
-              command:
-                - pg_isready
-                - -U
-                - postgres
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            exec:
-              command:
-                - pg_isready
-                - -U
-                - postgres
-            initialDelaySeconds: 5
-            periodSeconds: 5
-      volumes:
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials-from-kv
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials-from-kv
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials-from-kv
+              key: POSTGRES_PASSWORD
+        volumeMounts:
         - name: postgres-storage
-          persistentVolumeClaim:
-            claimName: postgres-pvc
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: postgres-sa
-  namespace: 3tirewebapp-dev
-  labels:
-    app: postgres
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -90,11 +78,13 @@ metadata:
   namespace: 3tirewebapp-dev
   labels:
     app: postgres
+    app.kubernetes.io/name: 3tirewebapp
+    app.kubernetes.io/part-of: 3tirewebapp
 spec:
   type: ClusterIP
   ports:
-    - port: 5432
-      targetPort: 5432
-      protocol: TCP
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
   selector:
     app: postgres

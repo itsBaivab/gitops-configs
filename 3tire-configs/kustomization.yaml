@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - postgres-config.yaml
   - postgres-pvc.yaml
   - postgres.yaml # Updated to use External Secrets Operator
   - backend-config.yaml
