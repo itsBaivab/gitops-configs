@@ -12,13 +12,6 @@ resources:
   - frontend-complete.yaml
   - external-secrets-placeholder.yaml
 
-# Common labels applied to all resources (excluding Deployments to avoid selector immutability)
-# Note: commonLabels are removed to prevent Deployment selector conflicts
-# Labels are manually added to individual resources where needed
-# commonLabels:
-#   app.kubernetes.io/name: 3tirewebapp
-#   app.kubernetes.io/part-of: 3tirewebapp
-#   app.kubernetes.io/managed-by: kustomize
 
 # Common annotations applied to all resources
 commonAnnotations:
