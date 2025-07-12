@@ -12,17 +12,10 @@ resources:
   - frontend-complete.yaml
   - external-secrets-placeholder.yaml
 
-# Common labels applied to all resources (excluding Deployments to avoid selector immutability)
-# Note: commonLabels are removed to prevent Deployment selector conflicts
-# Labels are manually added to individual resources where needed
-# commonLabels:
-#   app.kubernetes.io/name: 3tirewebapp
-#   app.kubernetes.io/part-of: 3tirewebapp
-#   app.kubernetes.io/managed-by: kustomize
-
-# Common annotations applied to all resources
+# Common annotations (safe to apply to all resources)
 commonAnnotations:
   app.kubernetes.io/version: "1.0"
+  managed-by: "kustomize"
 
 # Centralized image management
 images:
@@ -33,7 +26,7 @@ images:
   - name: postgres
     newTag: "15"
 
-# Resource configurations - replica scaling only
+# Resource scaling
 replicas:
   - name: frontend
     count: 2
